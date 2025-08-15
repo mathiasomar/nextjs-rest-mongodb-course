@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { authMiddleware } from "./middlewares/api/authMiddleware";
+import { logMiddleware } from "./middlewares/api/logMiddleware";
 
 export const config = {
   matcher: "/api/:path*",
@@ -7,6 +8,11 @@ export const config = {
 
 export default function middleware(request: Request) {
   // Add your middleware logic here
+  if (request.url.includes("/api/blogs")) {
+    const logResult = logMiddleware(request);
+    console.log(logResult.response);
+  }
+
   const authResult = authMiddleware(request);
   if (!authResult.isValid) {
     return new NextResponse(JSON.stringify({ message: "Unauthorized" }), {
