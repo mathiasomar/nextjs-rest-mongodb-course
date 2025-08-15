@@ -14,3 +14,21 @@ export const GET = async () => {
     );
   }
 };
+
+export const POST = async (request: Request) => {
+  try {
+    const body = await request.json();
+    await connectDB();
+    const user = new User(body);
+    await user.save();
+    return new NextResponse(
+      JSON.stringify({ message: "User created successfully", user }),
+      { status: 201 }
+    );
+  } catch (error: unknown) {
+    return new NextResponse(
+      "Error creating user: " + (error as Error).message,
+      { status: 500 }
+    );
+  }
+};
