@@ -14,7 +14,7 @@ export const GET = async (request: Request) => {
     const searchKeywords = searchParams.get("keywords") as string;
     const startDate = searchParams.get("startDate");
     const endDate = searchParams.get("endDate");
-    const sorting = (searchParams.get("sorting") as any) || "asc";
+    const sorting = searchParams.get("sorting") as any;
 
     if (!userId || !Types.ObjectId.isValid(userId)) {
       return new NextResponse(
@@ -81,7 +81,7 @@ export const GET = async (request: Request) => {
       };
     }
 
-    const blogs = await Blog.find(filter).sort({ createdAt: sorting });
+    const blogs = await Blog.find(filter).sort({ createdAt: sorting || "asc" });
     return new NextResponse(JSON.stringify(blogs), { status: 200 });
   } catch (error: unknown) {
     return new NextResponse(
